@@ -8,10 +8,12 @@ function App() {
 
 
   useEffect(() => {
+
+
     api.get('/repositories').then(response => {
       setRepositories(response.data);
     })
-  }, [repositories])
+  }, [])
 
 
   async function handleAddRepository() {
@@ -26,19 +28,16 @@ function App() {
 
   async function handleRemoveRepository(id) {
     
-    const response = await api.delete(`/repositories/${id}`)
+    await api.delete(`/repositories/${id}`)
     
 
-    const repositoriesIndex = repositories.findIndex(repository => repository.id === id);
+    const deletedRepository = repositories.find(repository => repository.id === id);
 
-    if (repositoriesIndex < 0) {
-    return response.status(400).json({ error: 'Repository not found' })
-  }
+   
+    
+    const removedRepositories = repositories.filter(repository => repository !== deletedRepository)
 
-    const copyRepositories = repositories
-
-    const removedRepositories = copyRepositories.splice(repositoriesIndex, 1)
-
+    
 
     setRepositories([...removedRepositories]);
   }
